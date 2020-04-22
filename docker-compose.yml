@@ -1,0 +1,29 @@
+---
+version: "3"
+
+volumes:
+  traefik_data:
+
+
+services:
+  frontend:
+    image: traefik:v2.2
+    command: >-
+      --configfile /etc/traefik/traefik.yml
+      --log.level=INFO
+    ports:
+      - "443:443"
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "./traefik:/etc/traefik"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "traefik_data:/data/traefik"
+
+  backend:
+    build:
+      context: backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`backend.example`)
+      - traefik.http.services.backend.loadbalancer.server.port=8080
