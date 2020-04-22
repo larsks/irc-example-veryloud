@@ -1,10 +1,6 @@
 ---
 version: "3"
 
-volumes:
-  traefik_data:
-
-
 services:
   frontend:
     image: traefik:v2.2
@@ -18,7 +14,6 @@ services:
     volumes:
       - "./traefik:/etc/traefik"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "traefik_data:/data/traefik"
 
   backend:
     build:
